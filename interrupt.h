@@ -5,9 +5,11 @@
 #include <stdio.h>
 #include <avr/interrupt.h>
 #include "OLED.h"
+#include "inputs.h"
+#include "adc.h"
 
 // flags
-extern volatile bool adc_busy;
 
 void init_interrupts(void);
 void timer1_init(void);
+void Timer3_init(void);

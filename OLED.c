@@ -94,10 +94,10 @@ void OLED_stage_buffer(void)
 
 void OLED_write_char(uint8_t x, uint8_t y, char c)
 {
-    uint16_t index = ((x * 8) + COLUMNS * y);
-    for (uint8_t i = 0; i < 8; i++)
+    uint16_t index = ((x * 5) + COLUMNS * y);
+    for (uint8_t i = 0; i < 5; i++)
     {
-        BASE_ADR_SRAM_WRITE_BUFFER[index + i] = pgm_read_byte(&(font8[c - 32][i]));
+        BASE_ADR_SRAM_WRITE_BUFFER[index + i] = pgm_read_byte(&(font5[c - 32][i]));
     }
 }
 
@@ -106,22 +106,52 @@ void OLED_clear_buffer(void)
 
     for (uint16_t i = 0; i < PAGES * COLUMNS; i++)
     {
-	    BASE_ADR_SRAM_DISPLAY_BUFFER[i] = 0;
-		BASE_ADR_SRAM_WRITE_BUFFER[i] = 0;
+        BASE_ADR_SRAM_DISPLAY_BUFFER[i] = 0;
+        BASE_ADR_SRAM_WRITE_BUFFER[i] = 0;
+    }
+}
+void OLED_write_string(char char_arr[], uint8_t x,  uint8_t y)
+{
+   
+    for (uint8_t j = 0; j < strlen(char_arr); j++)
+    {
+        OLED_write_char(j + x, y, char_arr[j]);  
+    }
+   
+}
+void OLED_display_menu(menu_item menu[], uint8_t menu_len, uint8_t selected)
+{
+    // Get the joystick position, and determine where to move in the menu.
+    // Change the page we are pointing to in the OLED display.
+    for (uint8_t i = 0; i < menu_len; i++)
+    {
+
+        OLED_write_string(menu[i].label,2, i);
+        if(i == selected){
+            OLED_write_arrow(0,i);
+        }else{
+			OLED_remove_arrow(0,i);
+		}
+        // Have to increment the page we're on, in the memory mapping.
+    }
+
+}
+void OLED_write_arrow(uint8_t x, uint8_t y){
+    uint16_t index = x + y*COLUMNS;
+       for (uint8_t i = 0; i < 5; i++)
+    {
+        BASE_ADR_SRAM_WRITE_BUFFER[index + i] = pgm_read_byte(&(arrow[i]));
     }
 }
 
-//
- //void OLED_display_user_interface()
- //{
-     //// Get the joystick position, and determine where to move in the menu.
-     //// Change the page we are pointing to in the OLED display.
-     //for (uint8_t i = 0; i < menu.size(); i++)
-     //{
-         //for (uint8_t j = 0; j < menu[i].label.size(); j++)
-         //{
-             //OLED_write_char(j, i, menu[i].label[j]);
-         //}
-         //// Have to increment the page we're on, in the memory mapping.
-     //}
- //}
+void OLED_remove_arrow(uint8_t x, uint8_t y){
+	uint16_t index = x + y*COLUMNS;
+	for (uint8_t i = 0; i < 5; i++)
+	{
+		BASE_ADR_SRAM_WRITE_BUFFER[index + i] = 0;
+	}
+}
+void OLED_new_game(void)
+{
+    printf("New game\n\r");
+}

@@ -1,10 +1,13 @@
 #pragma once
 #include <stdlib.h>
 #include <avr/io.h>
-#include "interrupt.h"
+#include <stdbool.h>
+#include <avr/interrupt.h>
+
 #include <stdio.h>
 
 #define BASE_ADR_ADC ((uint8_t*)0x1400)
+extern volatile bool adc_busy;
 
 //global variables
 uint8_t x_init_pos;

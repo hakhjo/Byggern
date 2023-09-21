@@ -44,7 +44,7 @@ void timer1_init(void)
     // For example, with a prescaler of 256 and 8 MHz system clock:
     // (8,000,000 / 256) / 60 = 520.83 (approx.)
     // OCR value = 520
-    OCR1A = 320 / 60;
+    OCR1A = 320 * 2;
 
     // Configure Timer1 in CTC mode (Clear Timer on Compare match)
     // and with a prescaler of 256.
@@ -55,8 +55,31 @@ void timer1_init(void)
     TIMSK = (1 << OCIE1A);
 }
 
+// Initialize Timer3 for a 60 Hz interrupt
+void Timer3_init()
+{
+	TCNT3 = 0;  // Set initial timer value
+	
+	// Assume you've calculated OCR3A to be a suitable value for Timer3
+	// For example, if it's similar to Timer1, it could be 520
+	OCR3A = 520;
+	
+	// Configure Timer3 in CTC mode and prescaler = 256
+	TCCR3A = 0;
+	TCCR3B = (1 << WGM32) | (1 << CS32) | (1<<CS30);
+	
+	// Enable the Output Compare A interrupt for Timer3
+	ETIMSK = (1 << OCIE3A);
+}
+
+ISR(TIMER3_COMPA_vect){
+	
+   update_global_inputs();
+}
 // Timer1 ISR
 ISR(TIMER1_COMPA_vect)
 {
-    //printf("Hello\r\n");
+   
+    OLED_stage_buffer();
+    OLED_display_buffer();
 }
