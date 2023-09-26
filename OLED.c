@@ -78,7 +78,7 @@ void OLED_clear_buffers(void)
     }
 }
 
-void OLED_write_char(uint8_t x, uint8_t y, char c)
+void OLED_write_char(char c, uint8_t x, uint8_t y)
 {
     uint16_t index = ((x * 5) + COLUMNS * y);
     for (uint8_t i = 0; i < 5; i++)

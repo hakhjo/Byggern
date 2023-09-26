@@ -1,5 +1,8 @@
 #include "inputs.h"
 
+
+volatile bool inputs_updated = false;
+
 void init_joystick()
 {
 	joystick_offset.x = read_ADC_value(X_JOYSTICK);
@@ -8,10 +11,12 @@ void init_joystick()
 
 void update_global_inputs()
 {
+	prev_joystick_direction = joystick_direction;
 	joystick_position = read_mapped_joystick_position();
 	left_slider = read_ADC_value(LEFT_SLIDER);
 	right_slider = read_ADC_value(RIGHT_SLIDER);
-	prev_joystick_direction = joystick_direction;
+	joystick_direction = get_joystick_direction(joystick_position);
+	inputs_updated = true;
 }
 
 int8_t map_input_value(uint8_t raw_value, InputDevice device)

@@ -11,4 +11,4 @@ typedef struct menu_item
 
 void display_menu(menu_item menu[], uint8_t menu_len, uint8_t menu_index);
 void navigate_menu(menu_item menu[]);
-void volatile uint8_t menu_index;
+volatile uint8_t menu_index;

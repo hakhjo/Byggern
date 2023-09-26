@@ -34,29 +34,32 @@ void init_devices()
 
 void menu_function1(void)
 {
-	printf("FN1")
+	printf("FN1");
 }
 
 void menu_function2(void)
 {
-	printf("FN2")
+	printf("FN2");
 }
 
 int main(void)
 {
+	init_devices();
 	menu_item item1 = {"Item1", *menu_function1};
 	menu_item item2 = {"Item2", *menu_function2};
 	menu_item test_menu[] = {item1, item2};
-	uint8_t menu_len = sizeof(test_menu) / sizeof(game_main_menu[0]);
+	uint8_t menu_len = sizeof(test_menu) / sizeof(test_menu[0]);
 
 	while (1)
 	{
-		printf("joystick_position: %d,%d\n\r", joystick_position.x, joystick_position.y);
-		printf("left_slider: %d\n\r", left_slider);
-		printf("right_slider: %d\n\r", right_slider);
-
-		navigate_menu(test_menu);
-		display_menu(test_menu, menu_len, selected);
+		//printf("joystick_position: %d,%d\n", joystick_position.x, joystick_position.y);
+		//printf("joystick_direction: %d, \t", joystick_direction);
+		//printf("menu index: %d\n\r", menu_index);
+		if (inputs_updated) {
+			inputs_updated = false;
+			navigate_menu(test_menu);
+		}
+		display_menu(test_menu, menu_len, menu_index);
 	}
 	return 0;
 }
