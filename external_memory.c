@@ -1,4 +1,4 @@
-#include "sram.h"
+#include "external_memory.h"
 
 void SRAM_test(void)
 {
@@ -39,7 +39,8 @@ void SRAM_test(void)
 	printf("SRAM test completed with \n%4d errors in write phase and \n%4d errors in retrieval phase\n\n", write_errors, retrieval_errors);
 }
 
-void init_external_memory(void){
-	MCUCR |= 1<<SRE;
-	SFIOR |= 1<<XMM0;
+void init_external_memory(void)
+{
+	MCUCR |= 1 << SRE;
+	SFIOR |= 1 << XMM0;
 }

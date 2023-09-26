@@ -15,53 +15,48 @@
 #include <stdbool.h>
 
 #include "uart.h"
-#include "sram.h"
+#include "external_memory.h"
 #include "interrupt.h"
 #include "adc.h"
 #include "OLED.h"
-#include "inputs.h"
-// flags
-void xmem_init(void);
+#include "menu.h"
 
-void xmem_init(void)
-{
-	MCUCR |= 1 << SRE;
-	SFIOR |= 1 << XMM0;
-}
-
-
-int main(void)
+void init_devices()
 {
 	init_external_memory();
 	init_interrupts();
 	init_USART(UBRR);
 	init_joystick();
-	_delay_ms(100);
 	init_OLED();
-	timer1_init();
-	Timer3_init();
-	OLED_clear_buffer();
-	menu_item new_game = {"New game", *OLED_new_game};
-	menu_item highscore = {"View highscore", *OLED_new_game};
-	menu_item game_main_menu[] = {new_game, highscore};
-	uint8_t menu_len = sizeof(game_main_menu)/sizeof(game_main_menu[0]);
-	
-	while(1){
-		//printf("joystick_position: %d,%d\n\r", get_joystick_analog_position().x, get_joystick_analog_position().y);
+	init_input_timer();
+	init_OLED_timer();
+}
+
+void menu_function1(void)
+{
+	printf("FN1")
+}
+
+void menu_function2(void)
+{
+	printf("FN2")
+}
+
+int main(void)
+{
+	menu_item item1 = {"Item1", *menu_function1};
+	menu_item item2 = {"Item2", *menu_function2};
+	menu_item test_menu[] = {item1, item2};
+	uint8_t menu_len = sizeof(test_menu) / sizeof(game_main_menu[0]);
+
+	while (1)
+	{
 		printf("joystick_position: %d,%d\n\r", joystick_position.x, joystick_position.y);
 		printf("left_slider: %d\n\r", left_slider);
 		printf("right_slider: %d\n\r", right_slider);
-		printf("selected %d\n\r", selected);
-		OLED_display_menu(game_main_menu, menu_len, selected);
-		// delay to allow time for other operations
-		// or to match the print rate with the ISR rate
-		_delay_ms(100);
+
+		navigate_menu(test_menu);
+		display_menu(test_menu, menu_len, selected);
 	}
-	// int i = 0;
-	// 	while(1) {
-	// 		OLED_write_char(i++ % 10,0,'a');
-	// 		OLED_write_char(0,1,'q');
-	// 		_delay_ms(101);
-	//   }
 	return 0;
 }

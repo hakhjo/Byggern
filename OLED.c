@@ -17,7 +17,6 @@ void init_OLED(void)
     OLED_write_ctrl(0x21);
     OLED_write_ctrl(0x20); // Set Memory Addressing Mode
     OLED_write_ctrl(0x00); // horizontal addressing mode
-    // write_c(0x02);
     OLED_write_ctrl(0xdb); // VCOM deselect level mode
     OLED_write_ctrl(0x30);
     OLED_write_ctrl(0xad); // master configuration
@@ -26,20 +25,14 @@ void init_OLED(void)
     OLED_write_ctrl(0xa6); // set normal display
     OLED_write_ctrl(0xaf); // display on
 
-    OLED_reset();
+    OLED_home();
+    OLED_clear_buffers();
+    OLED_display_buffer();
 }
 
 void OLED_write_ctrl(volatile uint8_t command)
 {
     *BASE_ADR_OLED_CMD = command;
-}
-
-void OLED_clear(void)
-{
-    for (int i = 0; i < 1024; i++)
-    {
-        *BASE_ADR_OLED_DATA = 0x00;
-    }
 }
 
 void OLED_home(void)
@@ -53,22 +46,6 @@ void OLED_home(void)
     // rows
     OLED_write_ctrl(0x22);
     OLED_write_ctrl(0x00);
-    OLED_write_ctrl(0x07);
-}
-
-void OLED_reset(void)
-{
-
-    // clear screen
-    OLED_clear();
-    // moving the pointer
-    OLED_home();
-}
-
-void OLED_goto_line(uint8_t line)
-{
-    OLED_write_ctrl(0x22);
-    OLED_write_ctrl(line);
     OLED_write_ctrl(0x07);
 }
 
@@ -89,7 +66,16 @@ void OLED_stage_buffer(void)
     {
         BASE_ADR_SRAM_DISPLAY_BUFFER[i] = BASE_ADR_SRAM_WRITE_BUFFER[i];
     }
-    // memcpy(BASE_ADR_SRAM_WRITE_BUFFER, BASE_ADR_SRAM_DISPLAY_BUFFER, PAGES * COLUMNS);
+}
+
+void OLED_clear_buffers(void)
+{
+
+    for (uint16_t i = 0; i < PAGES * COLUMNS; i++)
+    {
+        BASE_ADR_SRAM_DISPLAY_BUFFER[i] = 0;
+        BASE_ADR_SRAM_WRITE_BUFFER[i] = 0;
+    }
 }
 
 void OLED_write_char(uint8_t x, uint8_t y, char c)
@@ -101,57 +87,35 @@ void OLED_write_char(uint8_t x, uint8_t y, char c)
     }
 }
 
-void OLED_clear_buffer(void)
+void OLED_write_string(char char_arr[], uint8_t x, uint8_t y)
 {
 
-    for (uint16_t i = 0; i < PAGES * COLUMNS; i++)
-    {
-        BASE_ADR_SRAM_DISPLAY_BUFFER[i] = 0;
-        BASE_ADR_SRAM_WRITE_BUFFER[i] = 0;
-    }
-}
-void OLED_write_string(char char_arr[], uint8_t x,  uint8_t y)
-{
-   
     for (uint8_t j = 0; j < strlen(char_arr); j++)
     {
-        OLED_write_char(j + x, y, char_arr[j]);  
+        OLED_write_char(char_arr[j], j + x, y);
     }
-   
 }
-void OLED_display_menu(menu_item menu[], uint8_t menu_len, uint8_t selected)
+
+void OLED_write_arrow(uint8_t x, uint8_t y)
 {
-    // Get the joystick position, and determine where to move in the menu.
-    // Change the page we are pointing to in the OLED display.
-    for (uint8_t i = 0; i < menu_len; i++)
-    {
-
-        OLED_write_string(menu[i].label,2, i);
-        if(i == selected){
-            OLED_write_arrow(0,i);
-        }else{
-			OLED_remove_arrow(0,i);
-		}
-        // Have to increment the page we're on, in the memory mapping.
-    }
-
-}
-void OLED_write_arrow(uint8_t x, uint8_t y){
-    uint16_t index = x + y*COLUMNS;
-       for (uint8_t i = 0; i < 5; i++)
+    uint16_t index = x + y * COLUMNS;
+    for (uint8_t i = 0; i < 5; i++)
     {
         BASE_ADR_SRAM_WRITE_BUFFER[index + i] = pgm_read_byte(&(arrow[i]));
     }
 }
 
-void OLED_remove_arrow(uint8_t x, uint8_t y){
-	uint16_t index = x + y*COLUMNS;
-	for (uint8_t i = 0; i < 5; i++)
-	{
-		BASE_ADR_SRAM_WRITE_BUFFER[index + i] = 0;
-	}
-}
-void OLED_new_game(void)
+void OLED_write_blank(uint8_t x, uint8_t y)
 {
-    printf("New game\n\r");
+    uint16_t index = x + y * COLUMNS;
+    for (uint8_t i = 0; i < 5; i++)
+    {
+        BASE_ADR_SRAM_WRITE_BUFFER[index + i] = 0;
+    }
+}
+
+ISR(TIMER1_COMPA_vect)
+{
+    OLED_stage_buffer();
+    OLED_display_buffer();
 }
