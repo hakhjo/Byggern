@@ -25,8 +25,8 @@
 void init_devices()
 {
 	init_spi();
-	//MCP2515_Init_Loopback();
-	MCP2515_Init();
+	MCP2515_Init_Loopback();
+	//MCP2515_Init();
 	init_external_memory();
 	init_interrupts();
 	init_USART(UBRR);
@@ -64,9 +64,15 @@ int main(void)
 			//navigate_menu(test_menu);
 		//}
 		//display_menu(test_menu, menu_len, menu_index);
-		c = (readMCP2515Register(0x0E));
-		printf("%x\n\r",c);
-		_delay_ms(1);
+		//
+		//c = (readMCP2515Register(0x0E));
+		//printf("%d\n\r", c);
+		printf("original value %d\n\r", readMCP2515Register(0x36));
+		MCP2515_WriteRegister(0x36, 5);
+		printf("new value %d\n\r", readMCP2515Register(0x0E));
+		//printf("%x\n\r",SPI_Receive());
+		//
+		//_delay_ms(1);
 	}
 	return 0;
 }

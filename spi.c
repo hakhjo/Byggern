@@ -67,8 +67,6 @@ uint8_t SPI_Receive(void) {
 	// Send dummy byte to initiate reception
 	SPI_Transmit(0xFF);
 	
-	// Wait for reception to complete
-	//while (!(SPSR & (1 << SPIF)));
 	
 	return SPDR;
 }
