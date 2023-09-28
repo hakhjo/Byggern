@@ -9,12 +9,26 @@
 #define MCP_RESET        0xC0
 #define MCP_WRITE        0x02
 #define MCP_READ         0x03
-#define MCP_BITMOD       0x05
+
+//-------
 #define MCP_LOOPBACK     0x40  // Mode setting for loopback
-#define MCP_CANCTRL      0x0F
+#define MCP_CANCTRL      0x0F //adress for can control register
+#define MCP_READ_STATUS_CMD 0xA0 //read_status
+
+//request to send
+#define MCP_RTS_TX0 0x81
+#define MCP_RTS_TX1 0x82
+#define MCP_RTS_TX2 0x84
+
+//configs for init
 #define MCP_CNF3         0x28
 #define MCP_CNF2         0x29
 #define MCP_CNF1         0x2A
+
+// Bit modify
+#define MCP_BM 0x05
+
+
 
 void init_spi(void){
     /* Set MOSI and SCK and SS output, all others input */
@@ -73,6 +87,48 @@ uint8_t readMCP2515Register(uint8_t address) {
 	return receivedData;
 }
 
+uint8_t MCP2515_ReadStatus() {
+	uint8_t status;
+	
+	MCP2515_Select();
+	SPI_Transmit(MCP_READ_STATUS_CMD);
+	status = SPI_Receive();
+	MCP2515_Deselect();
+	
+	return status;
+}
+// Function to request to send from a specific buffer
+void MCP2515_RequestToSend(uint8_t bufferNum) {
+	uint8_t command;
+
+	switch (bufferNum) {
+		case 0:
+		command = MCP_RTS_TX0;
+		break;
+		case 1:
+		command = MCP_RTS_TX1;
+		break;
+		case 2:
+		command = MCP_RTS_TX2;
+		break;
+		default:
+		return; // Invalid buffer number
+	}
+
+	MCP2515_Select();
+	SPI_Transmit(command);
+	MCP2515_Deselect();
+}
+
+void MCP2515_bit_modify(uint8_t address, uint8_t mask_byte, uint8_t data) {
+	MCP2515_Select();
+	SPI_Transmit(MCP_BM);
+	SPI_Transmit(address);
+	SPI_Transmit(mask_byte);
+	SPI_Transmit(data);
+	MCP2515_Deselect();
+}
+
 // Write to MCP2515 register
 void MCP2515_WriteRegister(uint8_t address, uint8_t data) {
 	MCP2515_Select();
@@ -81,29 +137,29 @@ void MCP2515_WriteRegister(uint8_t address, uint8_t data) {
 	SPI_Transmit(data);
 	MCP2515_Deselect();
 }
-// Initialize MCP2515
-//void MCP2515_Init() {
-	//MCP2515_Reset();
-	//
+ //Initialize MCP2515
+void MCP2515_Init() {
+	MCP2515_Reset();
+	
 	 //Set bit timing (assuming 16 MHz crystal and 500 kbps CAN speed)
-	//MCP2515_WriteRegister(MCP_CNF1, 0x00);
-	//MCP2515_WriteRegister(MCP_CNF2, 0x90);
-	//MCP2515_WriteRegister(MCP_CNF3, 0x82);
-	//
+	MCP2515_WriteRegister(MCP_CNF1, 0x00);
+	MCP2515_WriteRegister(MCP_CNF2, 0x90);
+	MCP2515_WriteRegister(MCP_CNF3, 0x82);
+	
 	 //Set normal mode
-	//MCP2515_WriteRegister(MCP_CANCTRL, 0x00);
-//}
+	MCP2515_WriteRegister(MCP_CANCTRL, 0x00);
+}
 
 // Initialize MCP2515 for loopback mode
 void MCP2515_Init_Loopback() {
 	MCP2515_Reset();
 	
-	// Set bit timing (assuming 16 MHz crystal and desired CAN speed)
-	// If you're not connecting to a real CAN bus, these values are less critical, but they still need to be set.
+	 //Set bit timing (assuming 16 MHz crystal and desired CAN speed)
+	 //If you're not connecting to a real CAN bus, these values are less critical, but they still need to be set.
 	MCP2515_WriteRegister(MCP_CNF1, 0x00);
 	MCP2515_WriteRegister(MCP_CNF2, 0x90);
 	MCP2515_WriteRegister(MCP_CNF3, 0x82);
 	
-	// Set loopback mode
+	 //Set loopback mode
 	MCP2515_WriteRegister(MCP_CANCTRL, MCP_LOOPBACK);
 }

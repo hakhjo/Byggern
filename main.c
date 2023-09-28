@@ -25,7 +25,8 @@
 void init_devices()
 {
 	init_spi();
-	MCP2515_Init_Loopback();
+	//MCP2515_Init_Loopback();
+	MCP2515_Init();
 	init_external_memory();
 	init_interrupts();
 	init_USART(UBRR);
@@ -64,6 +65,7 @@ int main(void)
 		//}
 		//display_menu(test_menu, menu_len, menu_index);
 		c = (readMCP2515Register(0x0E));
+		printf("%x\n\r",c);
 		_delay_ms(1);
 	}
 	return 0;
