@@ -40,6 +40,7 @@ uint8_t MCP2515_read_status(void) {
 	
 	return status;
 }
+
 // Function to request to send from a specific buffer
 void MCP2515_request_send(uint8_t bufferNum) {
 	uint8_t command;
