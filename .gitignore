@@ -3,3 +3,6 @@
 Debug
 *.xml
 *.cproj
+*.atsln
+Device_Startup
+.vs
