@@ -85,13 +85,13 @@ Copyright 2003 Kimberly Otten Software Consulting
 #define MCP_TXB0DLC 0x35
 #define MCP_TXB0D0 0x36
 
-//Send-buffer 1
+// Send-buffer 1
 #define MCP_TXB1SIDH 0x41
 #define MCP_TXB1SIDL 0x42
 #define MCP_TXB1DLC 0x45
 #define MCP_TXB1D0 0x46
 
-//Send-buffer 2
+// Send-buffer 2
 #define MCP_TXB2SIDH 0x51
 #define MCP_TXB2SIDL 0x52
 #define MCP_TXB2DLC 0x55
@@ -181,7 +181,6 @@ Copyright 2003 Kimberly Otten Software Consulting
 #define MCP_ERRIF 0x20
 #define MCP_WAKIF 0x40
 #define MCP_MERRF 0x80
-
 
 // Define the CS pin for MCP2515
 #define MCP2515_CS_PORT PORTB
