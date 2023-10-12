@@ -57,18 +57,19 @@ int main(void)
 	// menu_item test_menu[] = {item1, item2};
 	// uint8_t menu_len = sizeof(test_menu) / sizeof(test_menu[0]);
 	int i = 0;
-	printf("Canstat register %x\n\r" , MCP2515_read_register(0x0E));
+	printf("Canstat register 0x%x\n\r" , MCP2515_read_register(0x0E));
 	
 	// Sender melding
 	message_t message = {
 		1, // Id
-		6, // Lengde p� dataen
-		"heiiii" // Data. Maks �tte byte
+		6, //Data length
+		"heiiii" //data
 	};
-	can_send(&message); // Sender melding
+	can_send(&message); 
 
-	// N� er meldingen sendt. Fordi vi er i loopbackmodus blir meldingen umiddelbart "mottatt" ac MCP2515.
-
+	
+	//printf("RXB0CTRL register 0x%x \n\r", MCP2515_read_register(0x60));
+	_delay_us(100);
 	// Mottar melding
 	message_t receive = can_receive();
 	printf("melding motatt.\r\n");

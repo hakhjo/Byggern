@@ -14,9 +14,9 @@ void can_send(message_ptr message) {
 	// MCP2515_write_reg(MCP_TXB0SIDL, (message->id % 8) << 5); // De tre laveste bitene i iden.
 
 
-
+	printf("message lowid 0x%x\n\r" ,  (message->id & 0b111)<<5);
 	MCP2515_write_reg(MCP_TXB0SIDH, (message->id >> 3));
-	MCP2515_write_reg(MCP_TXB0SIDL, (message->id & 0b111));
+	MCP2515_write_reg(MCP_TXB0SIDL, (message->id & 0b111) <<5);
 
 	 //Lengde. TXBnDLC
 	MCP2515_write_reg(MCP_TXB0DLC, message->length);
@@ -32,10 +32,10 @@ message_t can_receive() {
 	// Alt her foregår med buffer 0
 	message_t message = {};
 
-	uint8_t id_low = MCP2515_read_register(MCP_RXB0SIDL) >> 5; // Shift right by 5 to get the lower 3 bits of the ID
+	uint8_t id_low = MCP2515_read_register(MCP_RXB0SIDL);
 	uint8_t id_high = MCP2515_read_register(MCP_RXB0SIDH);
-	message.id = (id_high << 3) | id_low;
-	printf("high: 0x%x, low: 0x%x\n", id_high,id_high);
+	message.id = (id_high << 3) | (id_low >>5);
+	printf("high: 0x%x, low: 0x%x\n", id_high,id_low);
 	// Lengde. RXBnDLC
 	message.length = MCP2515_read_register(MCP_RXB0DLC);
 
