@@ -12,21 +12,19 @@
 #ifndef CAN_CONTROLLER_H_
 #define CAN_CONTROLLER_H_
 
-
-
-
-
+#include "sam.h"
+#include "printf-stdarg.h"
 #include <stdint.h>
 
 #define  sjw 0	   // sync jump width length 1 x T_q
 #define  btlmode 1 // PS2 bit time length
-#define  Fq 500	   // baud rate prescaler, 500kHz
+#define  Fq 250*16	   // baud rate prescaler, 500kHz
 #define  prseg 2   // propagation segment length
 #define  phseg1 6  // PS1 length
-#define  phseg2 6  // PS2 length
+#define  phseg2 7  // PS2 length
 #define brp (84000/(Fq)-1)
 
-uint32_t can_br_value = (brp<<16)|(sjw <<12)|(prseg<<8)|(phseg1<<4)|phseg2;
+uint32_t can_br_value;
 typedef struct can_message_t
 {
 	uint16_t id;

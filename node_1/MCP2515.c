@@ -88,10 +88,11 @@ void MCP2515_init() {
 	const uint8_t sjw = 0;	   // sync jump width length 1 x T_q
 	const uint8_t btlmode = 1; // PS2 bit time length
 	const uint32_t Fq = 500;		   // baud rate prescaler, 500kHz
-	const uint8_t prseg = 2;   // propagation segment length
+	const uint8_t prseg = 2;   // propagation segment length 
 	const uint8_t phseg1 = 6;  // PS1 length
-	const uint8_t phseg2 = 6;  // PS2 length
-	const uint8_t brp = 16000/(2*Fq);
+	const uint8_t phseg2 = 7;  // PS2 length
+	const uint8_t brp = 1;
+	printf("brp %d \n\r", brp);
 	mcp2515_write(MCP_CNF3, phseg2 -1); //not shiftet becaus phseg2 is the rightmost
 	mcp2515_write(MCP_CNF2, (btlmode << 7) |  ((phseg1-1) <<3)| (prseg-1)); //set to ps2 length given in cnf3, set length of ps1 and there are 2 propagaton segment bits
 	mcp2515_write(MCP_CNF1, (brp-1)); //since sjw = 0 i dont bother, and 

@@ -10,10 +10,7 @@
 
 #include "can_controller.h"
 
-#include "sam.h"
-
-#include "printf-stdarg.h"
-
+uint32_t can_br_value = (brp<<16)|(sjw<<12)|((prseg-1)<<8)|((phseg1-1)<<4)|(phseg2-1);
 
 /**
  * \brief Initialize can bus with predefined number of rx and tx mailboxes, 

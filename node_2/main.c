@@ -8,6 +8,11 @@
 
 #include "sam.h"
 #include "can_controller.h"
+#include "can_interrupt.h"
+
+
+
+
 void delay(volatile uint32_t count) {
 	while(count--) {}
 }
@@ -19,6 +24,7 @@ int main(void)
 	WDT->WDT_MR = WDT_MR_WDDIS;  
 	configure_uart();
 	can_init(can_br_value,1,1);
+	printf("initializing");
 	
 	/* Enable the peripheral clock for the LED's PIO */
 	PMC->PMC_PCER0 = 1 << ID_PIOA;
