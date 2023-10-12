@@ -11,6 +11,13 @@
 
 #ifndef CAN_INTERRUPT_H_
 #define CAN_INTERRUPT_H_
+
+
+#include <stdio.h>
+#include "sam.h"
+#include "printf-stdarg.h"
+#include "can_controller.h"
+
 void CAN0_Handler       ( void );
 
 
