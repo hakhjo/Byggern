@@ -1,5 +1,6 @@
 #pragma once
 #include "spi.h"
+#include "inputs.h"
 #include "MCP2515.h"
 
 #define CAN_STANDARD_MESSAGE_ID_BITS 29 // CAN2.0B
@@ -14,11 +15,13 @@
 //} CAN_extended_frame;
 
 typedef struct Message {
-	uint32_t id;
+	uint16_t id;
 	uint8_t length;
 	char data[8];
 } message_t, *message_ptr;
-void init_CAN(void);
 
+
+void init_CAN(void);
+void can_send_joystick_position(void);
 void can_send(message_ptr message);
 message_t can_receive(void);

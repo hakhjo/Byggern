@@ -46,3 +46,19 @@ message_t can_receive() {
 
 	return message;
 }
+
+void can_send_joystick_position(void){
+	char c[8];
+	c[0] = (char) joystick_position.x;
+	c[1] = (char) joystick_position.y;
+	
+	message_t message;
+	message.id = 1;
+	message.length = 2;
+	memcpy(message.data, c, 8);
+	printf("Id %d, Datalength %d\n\r", message.id, message.length);
+	for(int i = 0;i<message.length;i++){
+		printf("%d ", message.data[i]);
+	}
+	can_send(&message);
+}

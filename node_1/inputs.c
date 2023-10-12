@@ -115,10 +115,10 @@ ISR(INT0_vect)
 	printf("BTN R\n\r");
 }
 
-ISR(INT1_vect)
-{
-	printf("BTN L\n\r");
-}
+//ISR(INT1_vect)
+//{
+	//printf("BTN L\n\r");
+//}
 
 ISR(TIMER3_COMPA_vect)
 {

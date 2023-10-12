@@ -8,7 +8,7 @@ void init_interrupts(void)
     EMCUCR |= (1 << ISC2);
     // Enable external interrupt INT0, INT1 and INT2
     GICR |= (1 << INT0);
-    GICR |= (1 << INT1);
+    //GICR |= (1 << INT1);
     GICR |= (1 << INT2);
 
     sei(); // enable interrupts

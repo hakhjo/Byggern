@@ -27,8 +27,7 @@
 void init_devices()
 {
 	init_SPI();
-	MCP2515_init_loopback();
-	//MCP2515_Init();
+	MCP2515_init();
 	init_external_memory();
 	init_interrupts();
 	init_USART(UBRR);
@@ -56,49 +55,52 @@ int main(void)
 	// menu_item item2 = {"Item2", *menu_function2};
 	// menu_item test_menu[] = {item1, item2};
 	// uint8_t menu_len = sizeof(test_menu) / sizeof(test_menu[0]);
-	int i = 0;
 	printf("Canstat register 0x%x\n\r" , MCP2515_read_register(0x0E));
 	
 	// Sender melding
-	message_t message = {
-		1, // Id
-		6, //Data length
-		"heiiii" //data
-	};
-	can_send(&message); 
+	
 
 	
 	//printf("RXB0CTRL register 0x%x \n\r", MCP2515_read_register(0x60));
-	_delay_us(100);
+	
 	// Mottar melding
-	message_t receive = can_receive();
-	printf("melding motatt.\r\n");
-	printf("Id: %u \r\n", receive.id);
-	printf("Lengde: %d \r\n", receive.length);
-	printf("Melding: %s \r\n\r\n", receive.data);
+	
+	//
+	//message_t receive = can_receive();
+	//printf("melding motatt.\r\n");
+	//printf("Id: %u \r\n", receive.id);
+	//printf("Lengde: %d \r\n", receive.length);
+	//printf("Melding: %s \r\n\r\n", receive.data);
 
-	//while (1)
-	//{
-		////printf("joystick_position: %d,%d\n", joystick_position.x, joystick_position.y);
-		////printf("joystick_direction: %d, \t", joystick_direction);
-		////printf("menu index: %d\n\r", menu_index);
-		////if (inputs_updated) {
-			////inputs_updated = false;
-			////navigate_menu(test_menu);
-		////}
-		////display_menu(test_menu, menu_len, menu_index);
-		////
-		////c = (readMCP2515Register(0x0E));
-		////printf("%d\n\r", c);
+
+	
+
+	while (1)
+	{
+		printf("joystick_position: %d,%d\n\r", joystick_position.x, joystick_position.y);
+		//printf("joystick_direction: %d, \t", joystick_direction);
+		//printf("menu index: %d\n\r", menu_index);
+		//if (inputs_updated) {
+			//inputs_updated = false;
+			//navigate_menu(test_menu);
+		//}
+		//display_menu(test_menu, menu_len, menu_index);
+		//
+		//c = (readMCP2515Register(0x0E));
+		//printf("%d\n\r", c);
+		
+		
+		
+		can_send_joystick_position();
+		_delay_ms(1000);
 		//printf("original value %d, ", MCP2515_read_register(MCP_RXB0D0));
 		//MCP2515_write_reg(MCP_TXB0D0, i++);
 		//
 		//printf("tx value %d, ", MCP2515_read_register(MCP_TXB0D0));
 		//MCP2515_request_send(0);
 		//printf("new value %d\n\r", MCP2515_read_register(MCP_RXB0D0)); // 0x0E??
-		////printf("%x\n\r",SPI_Receive());
-		////
-		//_delay_ms(500);
-	//}
+		//printf("%x\n\r",SPI_Receive());
+		//
+	}
 	return 0;
 }
