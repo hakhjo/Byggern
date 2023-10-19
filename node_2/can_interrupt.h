@@ -18,6 +18,8 @@
 #include "printf-stdarg.h"
 #include "can_controller.h"
 
+
+volatile uint8_t received;
 void CAN0_Handler       ( void );
 
 

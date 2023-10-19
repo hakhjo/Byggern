@@ -20,6 +20,9 @@
  *
  * \retval 
  */
+
+volatile uint8_t received = 0;
+
 void CAN0_Handler( void )
 {
 	if(DEBUG_INTERRUPT)printf("CAN0 interrupt\n\r");
@@ -51,7 +54,8 @@ void CAN0_Handler( void )
 			if(DEBUG_INTERRUPT)printf("%d ", message.data[i]);
 		}
 		if(DEBUG_INTERRUPT)printf("\n\r");
-		generate_pwm_cycle((int8_t)message.data[0]);
+		received = (int8_t)message.data[0];
+		//generate_pwm_cycle((int8_t)message.data[0]);
 	}
 	
 	if(can_sr & CAN_SR_MB0)

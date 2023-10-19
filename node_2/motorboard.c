@@ -40,7 +40,7 @@ void init_ADC(void) {
 	
 }
 
-void read_adc(){
+void read_ball_event(){
 	// Wait for the conversion to complete for the channel
 	while (!(ADC->ADC_ISR & (1 << 0)));
 	static uint16_t previous_value;

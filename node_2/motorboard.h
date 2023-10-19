@@ -14,5 +14,5 @@ extern uint8_t score;
 
 void init_PWM(void);
 void init_ADC(void);
-void read_adc(void);
+void read_ball_event(void);
 void generate_pwm_cycle(int8_t value);
