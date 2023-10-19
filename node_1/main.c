@@ -92,7 +92,6 @@ int main(void)
 		
 		
 		can_send_joystick_position();
-		_delay_ms(1000);
 		//printf("original value %d, ", MCP2515_read_register(MCP_RXB0D0));
 		//MCP2515_write_reg(MCP_TXB0D0, i++);
 		//
