@@ -11,7 +11,7 @@
 #include "can_interrupt.h"
 
 
-#define DEBUG_INTERRUPT 1
+#define DEBUG_INTERRUPT 0
 
 /**
  * \brief CAN0 Interrupt handler for RX, TX and bus error interrupts
@@ -51,6 +51,7 @@ void CAN0_Handler( void )
 			if(DEBUG_INTERRUPT)printf("%d ", message.data[i]);
 		}
 		if(DEBUG_INTERRUPT)printf("\n\r");
+		generate_pwm_cycle((int8_t)message.data[0]);
 	}
 	
 	if(can_sr & CAN_SR_MB0)

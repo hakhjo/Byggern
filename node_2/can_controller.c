@@ -192,6 +192,7 @@ uint8_t can_receive(CAN_MESSAGE* can_msg, uint8_t rx_mb_id)
 			}
 		}
 		
+		
 		//Reset for new receive
 		CAN0->CAN_MB[rx_mb_id].CAN_MMR = CAN_MMR_MOT_MB_RX;
 		CAN0->CAN_MB[rx_mb_id].CAN_MCR |= CAN_MCR_MTCR;
