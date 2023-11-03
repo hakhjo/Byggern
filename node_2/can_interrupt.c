@@ -54,7 +54,10 @@ void CAN0_Handler( void )
 			if(DEBUG_INTERRUPT)printf("%d ", message.data[i]);
 		}
 		if(DEBUG_INTERRUPT)printf("\n\r");
-		received = (int8_t)message.data[0];
+		x_dir = message.data[0];
+		y_dir = message.data[1];
+		//right_slider = message.data[2];
+		//printf("xdir: %d , ydir: %d \n\r", x_dir, y_dir);
 		//generate_pwm_cycle((int8_t)message.data[0]);
 	}
 	

@@ -11,6 +11,7 @@
 #include "can_interrupt.h"
 #include "motorboard.h"
 #include "motorbox.h"
+#include <stdlib.h>
 
 
 
@@ -23,6 +24,23 @@ void init_PIO(void) {
 	PMC->PMC_PCER0 |= 1 << ID_PIOB;
 	PMC->PMC_PCER0 |= 1 << ID_PIOC;
 	PMC->PMC_PCER0 |= 1 << ID_PIOD;
+	
+	// Encoder signals enters at PIN33-PIN40 on the SAM3X, and enabling input.
+	PIOC->PIO_ODR |= (PIO_PC8 | PIO_PC7 | PIO_PC6 | PIO_PC5 | PIO_PC4 | PIO_PC3 | PIO_PC2 | PIO_PC1 );
+	//PIOC ->PIO_OER |= PIO_PC12;
+	
+	// Disable PIO Control on PC13 and enable direct control by GPIO
+	PIOC->PIO_PER = PIO_PER_P12;
+	// Set PC13 as an output
+	PIOC->PIO_OER = PIO_OER_P12;
+	
+	//set the push to start low
+	PIOC->PIO_SODR = PIO_SODR_P12;
+	
+}
+
+uint16_t map_joystick(int8_t joystick_position){
+	return (joystick_position - (-100.0))/(100-(-100)) * (1404 -0) + 0;
 }
 
 void init_DAC(void) {
@@ -36,6 +54,12 @@ void init_DAC(void) {
 
 void disable_watchdog(void){
 	WDT->WDT_MR = WDT_MR_WDDIS;  
+}
+
+void configure_systick(void) {
+	SysTick->LOAD = 0xFFFFFF; // Set reload register
+	SysTick->VAL = 0; // Reset the SysTick counter value
+	SysTick->CTRL |= 1 | (1<<2);
 }
 
 void init_atsam3x8e(void){
@@ -57,17 +81,24 @@ int main(void)
 	delay(10000);
 	printf("enabled");
 	while(1){
-	motor_set_dir(1);
-		delay(5000000);
-		motor_set_speed(2000);
-	motor_set_dir(0);
-		delay(5000000);
-		motor_set_speed(2000);
-		printf("cycle");
-		
+	//printf("joystick_position mapped: %d \n\r", map_joystick(x_dir));
+	uint16_t joystick_pos = map_joystick(x_dir);
+	//printf("joystick_position mapped: %d \n\r", joystick_pos);
+	double output = PI_controller(read_encoder(), joystick_pos);
+	//printf("joystick_position mapped AFTER: %d \n\r", joystick_pos);
+	//printf("output : %d, x_dir %d \n\r", (int16_t)output, joystick_pos);
+	if(output < 0){
+		motor_set_dir(0);
+		}else{
+		motor_set_dir(1);
 	}
-		//read_ball_event();
-	//printf("ADC output %d, current score: %d \n\r", ADC->ADC_CDR[0] & 0xFFFu, score);
+	motor_set_speed(abs((int16_t)output));
+	
+	//printf("Encoder value:  %d \n\r", read_encoder());	
+			//read_ball_event();
+			//printf("ADC output %d, current score: %d \n\r", ADC->ADC_CDR[0] & 0xFFFu, score);
+	}
+
     /* Initialize the SAM system */
 	
 	//printf("initializing");

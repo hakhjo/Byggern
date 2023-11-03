@@ -46,7 +46,7 @@ void read_ball_event(){
 	static uint16_t previous_value;
 	
 	 uint16_t value = ADC->ADC_CDR[0];
-	 if(value < 1000 && previous_value >= 500){
+	 if(value < 2000 && previous_value >= 2000){
 		 score++;
 	 }
 	 previous_value = value;
