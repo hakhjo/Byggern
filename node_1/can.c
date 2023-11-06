@@ -7,10 +7,10 @@ void init_CAN(void){
 
 
 void can_send(message_ptr message) {
-	// Alt her foregår med buffer 0
+	// Alt her foregï¿½r med buffer 0
 
 	 //Id. TXBnSIDH og TXBnSIDL
-	// MCP2515_write_reg(MCP_TXB0SIDH, message->id / 8); // De åtte høyeste bitene i iden.
+	// MCP2515_write_reg(MCP_TXB0SIDH, message->id / 8); // De ï¿½tte hï¿½yeste bitene i iden.
 	// MCP2515_write_reg(MCP_TXB0SIDL, (message->id % 8) << 5); // De tre laveste bitene i iden.
 
 
@@ -29,7 +29,7 @@ void can_send(message_ptr message) {
 }
 
 message_t can_receive() {
-	// Alt her foregår med buffer 0
+	// Alt her foregï¿½r med buffer 0
 	message_t message = {};
 
 	uint8_t id_low = MCP2515_read_register(MCP_RXB0SIDL);
@@ -51,10 +51,14 @@ void can_send_joystick_position(void){
 	char c[8];
 	c[0] = (char) joystick_position.x;
 	c[1] = (char) joystick_position.y;
+	c[2] = (char) right_slider;
+	c[3] = (char) r_btn;
+	r_btn = 0;
+	
 	
 	message_t message;
 	message.id = 1;
-	message.length = 2;
+	message.length = 4;
 	memcpy(message.data, c, 8);
 	printf("Id %d, Datalength %d\n\r", message.id, message.length);
 	for(int i = 0;i<message.length;i++){

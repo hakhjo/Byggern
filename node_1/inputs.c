@@ -112,7 +112,7 @@ JoystickDirection get_joystick_direction(JoystickPosition pos)
 
 ISR(INT0_vect)
 {
-	printf("BTN R\n\r");
+	r_btn = 1;
 }
 
 //ISR(INT1_vect)

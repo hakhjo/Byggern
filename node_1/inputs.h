@@ -33,6 +33,7 @@ volatile JoystickPosition joystick_position;
 volatile JoystickDirection joystick_direction;
 volatile uint8_t left_slider;
 volatile uint8_t right_slider;
+volatile uint8_t r_btn;
 
 volatile bool inputs_updated;
 
