@@ -1,5 +1,6 @@
 #include "motorbox.h"
-double error_sum = 0;
+//double error_sum = 0;
+volatile uint16_t encoder_pos = 0;
 
 void init_motorbox(void) {
 	PIOD->PIO_OER |= PIO_PD10; // motor enable
@@ -65,15 +66,38 @@ uint16_t read_encoder(void){
 	
 	return encoder_value;
 }
-
-double PI_controller(uint16_t encoder_value, uint16_t joystick_value){
-		double Kp = 1;
-		double Ki = 0.01;
-		double T = SysTick->VAL/840000;
-		double error = (double)joystick_value - encoder_value;
-		printf("error_sum: %d \n\r ", (int)error_sum);
-		SysTick->VAL = 0;
-		error_sum = error_sum + T*error;
-		return Kp*error + Ki*error_sum;
-		//denne funker ikke
+void TC3_Handler(void) {
+	// Clear status bit to acknowledge interrupt
+	uint32_t status = TC1->TC_CHANNEL[0].TC_SR;
+	// Call the PI controller function
+	
+	//printf("encoder_value: %d\n\r ", encoder_pos);
+	output = PI_controller(encoder_pos, joystick_pos);
+}
+int32_t PI_controller(uint16_t encoder_value, uint16_t joystick_value){
+		static volatile double error_sum = 0;
+		volatile double Kp = 10;
+		volatile double Ki = 1;
+		volatile double T = 0.01;
+		if(encoder_value >2000){
+			encoder_value = 0;
+		}
+		volatile double error = (double)joystick_value - encoder_value;
+		
+		
+		
+		volatile double output =  -(Kp*error + Ki*error_sum);
+		if((output) > 65535){
+			output = 65535;
+		}else if((output) < -65535){
+			output = -65535;
+		}else{
+			error_sum = error_sum + T*error;
+			//printf("error_sum: %d encoder_value: %d\n\r ", (int)error_sum, encoder_value);
+		}
+		return (int32_t)output;
 }		
+
+ uint16_t map_joystick(int8_t joystick_position){
+	 return (joystick_position - (-100.0))/(100-(-100)) * (1404 -0) + 0;
+ }

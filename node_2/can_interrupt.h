@@ -23,6 +23,7 @@ volatile uint8_t received;
 volatile int8_t x_dir;
 volatile int8_t y_dir;
 volatile uint8_t right_slider;
+volatile uint8_t r_btn;
 void CAN0_Handler       ( void );
 
 
