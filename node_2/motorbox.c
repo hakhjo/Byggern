@@ -69,7 +69,7 @@ uint16_t read_encoder(void){
 void TC3_Handler(void) {
 	// Clear status bit to acknowledge interrupt
 	uint32_t status = TC1->TC_CHANNEL[0].TC_SR;
-	// Call the PI controller function
+
 	
 	//printf("encoder_value: %d\n\r ", encoder_pos);
 	output = PI_controller(encoder_pos, joystick_pos);

@@ -13,18 +13,16 @@ void init_PWM(){
 	PIOC->PIO_PDR |= PIO_PDR_P18;
 }
 
-void generate_pwm_cycle(int8_t value){
+void generate_pwm_cycle(uint8_t value){
 	//må ligge mellom 74 og 172
-	PWM->PWM_CH_NUM[5].PWM_CDTY = (value -(-100))*(172-74)/(100-(-100)) + 74;
+	PWM->PWM_CH_NUM[5].PWM_CDTY = (value - 0)*(172-74)/(255-(0)) + 74;
 }
 
 void init_ADC(void) {
 	
 	PMC->PMC_PCER1 |= PMC_PCER1_PID37; // ADC peripheral id = 37;
 	
-	//// This register can only be written if the WPEN bit is cleared
-	//ADC->ADC_WPMR &= 0b0;
-	//
+
 	// Reset ADC
 	ADC->ADC_CR = ADC_CR_SWRST;
 	
@@ -34,8 +32,6 @@ void init_ADC(void) {
 	PIOA->PIO_ABSR |= (1<<2);
 	PIOA->PIO_PDR |= PIO_PDR_P2;  // enable peripheral control on PC26 (Pin 44)
 	
-	
-	// How to set TRACKTIM, and TRANSFER on the ADC. See p.1333
 	 
 	
 }

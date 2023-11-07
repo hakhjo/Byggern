@@ -58,10 +58,8 @@ void CAN0_Handler( void )
 		y_dir = message.data[1];
 		right_slider = message.data[2];
 		r_btn = message.data[3];
-		
-		
+	
 		//printf("xdir: %d , ydir: %d, right_slider: %d , r_btn: %d \n\r", x_dir, y_dir, right_slider, r_btn);
-		//generate_pwm_cycle((int8_t)message.data[0]);
 	}
 	
 	if(can_sr & CAN_SR_MB0)
