@@ -2,13 +2,13 @@
 
 void init_interrupts(void)
 {
-    // Configure INT0, INT1 and INT2 for rising edge detection
+    // Configure INT0 and INT2 for rising edge detection, INT1 for falling edge detection
     MCUCR |= (1 << ISC01) | (1 << ISC00);
-    MCUCR |= (1 << ISC11) | (1 << ISC10);
+    MCUCR |= (1 << ISC11) | (0 << ISC10);
     EMCUCR |= (1 << ISC2);
     // Enable external interrupt INT0, INT1 and INT2
     GICR |= (1 << INT0);
-    //GICR |= (1 << INT1);
+    GICR |= (1 << INT1);
     GICR |= (1 << INT2);
 
     sei(); // enable interrupts
@@ -28,7 +28,7 @@ void init_OLED_timer(void)
     TIMSK = (1 << OCIE1A);
 }
 
-// Initialize Timer3 for a 60 Hz interrupt
+
 void init_input_timer()
 {
     // Set initial timer value

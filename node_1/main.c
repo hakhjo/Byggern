@@ -35,6 +35,7 @@ void init_devices()
 	init_OLED();
 	init_input_timer();
 	init_OLED_timer();
+	MCP2515_init_interrupts();
 }
 
 void menu_function1(void)
@@ -55,7 +56,8 @@ int main(void)
 	// menu_item item2 = {"Item2", *menu_function2};
 	// menu_item test_menu[] = {item1, item2};
 	// uint8_t menu_len = sizeof(test_menu) / sizeof(test_menu[0]);
-	printf("Canstat register 0x%x\n\r" , MCP2515_read_register(0x0E));
+	printf("CANINTE 0x%x\n\r" , MCP2515_read_register(0x2B));
+	printf("CANINTF 0x%x\n\r" , MCP2515_read_register(0x2C));
 	
 	// Sender melding
 	
@@ -73,13 +75,20 @@ int main(void)
 	//printf("Melding: %s \r\n\r\n", receive.data);
 
 
-	
-
+	char display_string[15];
 	while (1)
 	{
-		printf("joystick_position: %d,%d\n\r", joystick_position.x, joystick_position.y);
+		if (can_rec_flag) {
+			message_t msg = can_receive();
+			sprintf(display_string, "Score: %d  ", msg.data[0]);
+			can_rec_flag = 0;
+			MCP2515_bit_modify(MCP_CANINTF, 0xFF, 0);
+		}
+		//printf("CANINTF 0x%x\n\r" , MCP2515_read_register(0x2C));
+		//printf("joystick_position: %d,%d\n\r", joystick_position.x, joystick_position.y);
 		//printf("joystick_direction: %d, \t", joystick_direction);
 		//printf("menu index: %d\n\r", menu_index);
+		//printf("CANINTF 0x%x\n\r" , MCP2515_read_register(0x2C));
 		//if (inputs_updated) {
 			//inputs_updated = false;
 			//navigate_menu(test_menu);
@@ -90,8 +99,9 @@ int main(void)
 		//printf("%d\n\r", c);
 		
 		
-		
+		//printf("CANINTF 0x%x\n\r" , MCP2515_read_register(0x2C));
 		can_send_joystick_position();
+		OLED_write_string(display_string,0,0);
 		//printf("original value %d, ", MCP2515_read_register(MCP_RXB0D0));
 		//MCP2515_write_reg(MCP_TXB0D0, i++);
 		//

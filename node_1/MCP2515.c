@@ -9,12 +9,12 @@ void MCP2515_reset(void) {
 	_delay_ms(10); // Allow some time for the reset to complete
 }
 
-// Chip Select (CS) for MCP2515
+// Chip Select 
 void MCP2515_select(void) {
 	MCP2515_CS_PORT &= ~(1 << MCP2515_CS_PIN);
 }
 
-// Chip Deselect (CS) for MCP2515
+// Chip Deselect 
 void MCP2515_deselect(void) {
 	MCP2515_CS_PORT |= (1 << MCP2515_CS_PIN);
 }
@@ -56,7 +56,7 @@ void MCP2515_request_send(uint8_t bufferNum) {
 		command = MCP_RTS_TX2;
 		break;
 		default:
-		return; // Invalid buffer number
+		return; 
 	}
 
 	MCP2515_select();
@@ -105,8 +105,6 @@ void MCP2515_init() {
 void MCP2515_init_loopback() {
 	MCP2515_reset();
 	
-	//Set bit timing (assuming 16 MHz crystal and desired CAN speed)
-	//If you're not connecting to a real CAN bus, these values are less critical, but they still need to be set.
 	MCP2515_write_reg(MCP_CNF1, 0x00);
 	MCP2515_write_reg(MCP_CNF2, 0x90);
 	MCP2515_write_reg(MCP_CNF3, 0x82);
@@ -114,3 +112,13 @@ void MCP2515_init_loopback() {
 	//Set loopback mode
 	MCP2515_write_reg(MCP_CANCTRL, MCP_LOOPBACK);
 }
+
+// MCP2515 configuration for interrupts
+void MCP2515_init_interrupts() {
+	// Enable interrupt for receive buffer 0
+	MCP2515_bit_modify(MCP_CANINTE, 0x02, 0x02);
+
+	// Clear any interrupt flags
+	MCP2515_bit_modify(MCP_CANINTF, 0xFF, 0x00);
+}
+

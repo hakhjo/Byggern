@@ -1,7 +1,9 @@
 #pragma once
 
 #include <stdint.h>
+#include <avr/interrupt.h>
 #include "spi.h"
+
 
 #ifndef __MCP2515_H
 #define __MCP2515_H
@@ -222,3 +224,4 @@ void MCP2515_reset(void);
 void MCP2515_bit_modify(uint8_t address, uint8_t mask_byte, uint8_t data);
 void MCP2515_request_send(uint8_t bufferNum);
 uint8_t MCP2515_read_status(void);
+void MCP2515_init_interrupts(void);

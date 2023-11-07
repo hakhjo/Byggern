@@ -3,6 +3,9 @@
 #include "inputs.h"
 #include "MCP2515.h"
 
+char prev_r_btn;
+volatile char can_rec_flag;
+
 #define CAN_STANDARD_MESSAGE_ID_BITS 29 // CAN2.0B
 
 
