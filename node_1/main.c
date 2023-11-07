@@ -82,8 +82,10 @@ int main(void)
 			message_t msg = can_receive();
 			sprintf(display_string, "Score: %d  ", msg.data[0]);
 			can_rec_flag = 0;
-			MCP2515_bit_modify(MCP_CANINTF, 0xFF, 0);
+
+
 		}
+					MCP2515_bit_modify(MCP_CANINTF, 0xFF, 0);
 		//printf("CANINTF 0x%x\n\r" , MCP2515_read_register(0x2C));
 		//printf("joystick_position: %d,%d\n\r", joystick_position.x, joystick_position.y);
 		//printf("joystick_direction: %d, \t", joystick_direction);
