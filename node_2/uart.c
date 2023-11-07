@@ -10,7 +10,7 @@
 #include <stdint.h>
 
 #include "sam.h"
-#include "uartSAM3X.h"
+#include "uart.h"
 
 //Ringbuffer for receiving multiple characters
 uart_ringbuffer rx_buffer;
@@ -59,7 +59,7 @@ Initialize UART communication
 	UART->UART_CR = UART_CR_RSTRX | UART_CR_RSTTX | UART_CR_RXDIS | UART_CR_TXDIS;
 
 	// Set the baudrate
-	UART->UART_BRGR = 547; // MCK / 16 * x = BaudRate (write x into UART_BRGR)  
+	UART->UART_BRGR = 547; // MCK / 16 * x = BaudRate (write x into UART_BRGR) to get baudrate = 9600
 
 	// No parity bits
 	UART->UART_MR = UART_MR_PAR_NO | UART_MR_CHMODE_NORMAL;	

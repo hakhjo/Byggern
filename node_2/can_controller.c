@@ -10,10 +10,7 @@
 
 #include "can_controller.h"
 
-#include "sam.h"
-
-#include "../uart_and_printf/printf-stdarg.h"
-
+uint32_t can_br_value = (brp<<16)|(sjw<<12)|((prseg-1)<<8)|((phseg1-1)<<4)|(phseg2-1);
 
 /**
  * \brief Initialize can bus with predefined number of rx and tx mailboxes, 
@@ -194,6 +191,7 @@ uint8_t can_receive(CAN_MESSAGE* can_msg, uint8_t rx_mb_id)
 				data_high = data_high >> 8;
 			}
 		}
+		
 		
 		//Reset for new receive
 		CAN0->CAN_MB[rx_mb_id].CAN_MMR = CAN_MMR_MOT_MB_RX;

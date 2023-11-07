@@ -10,12 +10,6 @@
 
 #include "can_interrupt.h"
 
-#include <stdio.h>
-#include "sam.h"
-
-#include "../uart_and_printf/printf-stdarg.h"
-
-#include "can_controller.h"
 
 #define DEBUG_INTERRUPT 0
 
@@ -26,6 +20,9 @@
  *
  * \retval 
  */
+
+volatile uint8_t received = 0;
+
 void CAN0_Handler( void )
 {
 	if(DEBUG_INTERRUPT)printf("CAN0 interrupt\n\r");
@@ -57,6 +54,12 @@ void CAN0_Handler( void )
 			if(DEBUG_INTERRUPT)printf("%d ", message.data[i]);
 		}
 		if(DEBUG_INTERRUPT)printf("\n\r");
+		x_dir = message.data[0];
+		y_dir = message.data[1];
+		right_slider = message.data[2];
+		r_btn = message.data[3];
+	
+		//printf("xdir: %d , ydir: %d, right_slider: %d , r_btn: %d \n\r", x_dir, y_dir, right_slider, r_btn);
 	}
 	
 	if(can_sr & CAN_SR_MB0)
